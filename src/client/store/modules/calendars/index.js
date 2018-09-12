@@ -1,14 +1,14 @@
-import * as getters from './getters'
-import * as actions from './actions'
-import mutations from './mutations'
+import * as getters from './getters';
+import * as actions from './actions';
+import mutations from './mutations';
 
 const state = {
-  calendars: []
-}
+  calendars: [],
+};
 
 export default {
   state,
   getters,
   actions,
-  mutations
-}
+  mutations,
+};

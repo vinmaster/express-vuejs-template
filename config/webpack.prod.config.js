@@ -1,45 +1,55 @@
-const webpack = require('webpack')
-const path = require('path')
-const assetsWebpackPlugin = require('assets-webpack-plugin')
+/* eslint-disable */
+const path = require('path');
+const assetsWebpackPlugin = require('assets-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
+  mode: 'production',
   entry: [
-    './src/client/index.js'
+    './src/client/index.js',
   ],
   output: {
     filename: 'bundle.[chunkhash].js',
     path: path.join(__dirname, '../public/js'),
-    publicPath: '/js/'
+    publicPath: '/js/',
   },
   resolve: {
     extensions: ['.js', '.vue'],
     alias: {
-      'vue': 'vue/dist/vue.common.js',
-      'src': path.resolve(__dirname, '../src'),
-      'client': path.resolve(__dirname, '../src/client'),
-      'components': path.resolve(__dirname, '../src/client/components'),
-      'store': path.resolve(__dirname, '../src/client/store')
-    }
+      vue: 'vue/dist/vue.common.js',
+      src: path.resolve(__dirname, '../src'),
+      client: path.resolve(__dirname, '../src/client'),
+      components: path.resolve(__dirname, '../src/client/components'),
+      store: path.resolve(__dirname, '../src/client/store'),
+    },
   },
   module: {
-    loaders: [
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+        ],
+      },
       {
         test: /\.vue$/,
-        loader: 'vue-loader'
+        loader: 'vue-loader',
+        options: {
+          loaders: {},
+        },
       },
       {
         test: /\.js$/,
-        include: path.join(__dirname, './src/client'),
         loader: 'babel-loader',
-        query: { presets: ['es2015'] }
-      }
-    ]
+        include: path.join(__dirname, './src/client'),
+        exclude: /node_modules/,
+        query: { presets: ['es2015'] },
+      },
+    ],
   },
   plugins: [
-    new webpack.NoEmitOnErrorsPlugin(),
+    new VueLoaderPlugin(),
     new assetsWebpackPlugin({ path: path.join(__dirname, '../public/js') }),
-    new webpack.DefinePlugin({
-      'process.env': { NODE_ENV: '"production"' }
-    }),
-  ]
-}
+  ],
+};

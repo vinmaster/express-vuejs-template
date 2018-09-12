@@ -1,7 +1,7 @@
-import { types } from './mutation-types'
+import { types } from './mutation-types';
 
 export default {
   [types.FETCHED_CALENDARS](state, { calendars }) {
-    state.calendars = calendars
-  }
-}
+    state.calendars = calendars;
+  },
+};

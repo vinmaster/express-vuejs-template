@@ -1,1 +1,1 @@
-export const calendars = (state) => state.calendars
+export const calendars = state => state.calendars;

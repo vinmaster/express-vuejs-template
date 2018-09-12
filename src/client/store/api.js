@@ -1,7 +1,7 @@
-import axios from 'axios'
+import axios from 'axios';
 
 export default class Api {
   static getCalendars() {
-    return axios.get('/api/calendars')
+    return axios.get('/api/calendars');
   }
 }

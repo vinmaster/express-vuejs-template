@@ -1,45 +1,45 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import createLogger from 'client/lib/logger'
-import calendars from './modules/calendars'
-import todos from './modules/todos'
+import Vue from 'vue';
+import Vuex from 'vuex';
+import createLogger from 'client/lib/logger';
+import calendars from './modules/calendars';
+import todos from './modules/todos';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
-const debug = process.env.NODE_ENV !== 'production'
+const debug = process.env.NODE_ENV !== 'production';
 
 const state = {
   title: 'Welcome',
-  subtext: 'This is subtext'
-}
+  subtext: 'This is subtext',
+};
 
 const types = {
   CHANGE_TITLE: 'CHANGE_TITLE',
-  CHANGE_SUBTEXT: 'CHANGE_SUBTEXT'
-}
+  CHANGE_SUBTEXT: 'CHANGE_SUBTEXT',
+};
 
 const getters = {
-  title: (state) => state.title,
-  subtext: (state) => state.subtext
-}
+  title: state => state.title,
+  subtext: state => state.subtext,
+};
 
 const actions = {
   changeTitle({ commit }, title) {
-    commit(types.CHANGE_TITLE, { title })
+    commit(types.CHANGE_TITLE, { title });
   },
   changeSubtext({ commit }, subtext) {
-    commit(types.CHANGE_SUBTEXT, { subtext })
-  }
-}
+    commit(types.CHANGE_SUBTEXT, { subtext });
+  },
+};
 
 const mutations = {
   [types.CHANGE_TITLE](state, { title }) {
-    state.title = title
+    state.title = title;
   },
   [types.CHANGE_SUBTEXT](state, { subtext }) {
-    state.subtext = subtext
-  }
-}
+    state.subtext = subtext;
+  },
+};
 
 const store = new Vuex.Store({
   state,
@@ -48,11 +48,11 @@ const store = new Vuex.Store({
   mutations,
   modules: {
     calendars,
-    todos
+    todos,
   },
   strict: debug,
-  plugins: debug ? [createLogger()] : []
-})
+  plugins: debug ? [createLogger()] : [],
+});
 
 // Hot reload each modules
 if (module.hot) {
@@ -63,10 +63,10 @@ if (module.hot) {
     store.hotUpdate({
       modules: {
         calendars: require('./modules/calendars').default,
-        todos: require('./modules/todos').default
-      }
-    })
-  })
+        todos: require('./modules/todos').default,
+      },
+    });
+  });
 }
 
-export default store
+export default store;

@@ -1,0 +1,23 @@
+{
+  "extends": "airbnb-base",
+  "env": {
+    "node": true,
+    "es6": true,
+    "mocha": true,
+    "browser": true,
+    "jquery": true
+  },
+  "rules": {
+    "import/no-dynamic-require": 0,
+    "max-len": 0,
+    "consistent-return": 0,
+    "no-await-in-loop": 0,
+    "no-param-reassign": 0,
+    "no-underscore-dangle": 0,
+    "no-unused-expressions": 0,
+    "import/no-unresolved": 0,
+    "arrow-parens": ["error", "as-needed"],
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "no-restricted-syntax": ["error", "ForInStatement", "LabeledStatement", "WithStatement"]
+  }
+}

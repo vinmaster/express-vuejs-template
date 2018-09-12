@@ -1,12 +1,12 @@
-const winston = require('winston')
+const winston = require('winston');
 
 const winstonTransports = process.env.NODE_ENV === 'test' ? [] : [
   new winston.transports.Console({
     json: false,
-    colorize: true
-  })
-]
+    colorize: true,
+  }),
+];
 
-const logger = new winston.Logger({ transports: winstonTransports })
+const logger = winston.createLogger({ transports: winstonTransports });
 
-module.exports = logger
+module.exports = logger;
