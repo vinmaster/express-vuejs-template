@@ -17,7 +17,7 @@ const calendars = [
   },
 ];
 
-module.exports = class CalendarsController {
+module.exports = class UsersController {
   static index(req, res, _next) {
     Helper.renderSuccessJson(res, { calendars });
   }

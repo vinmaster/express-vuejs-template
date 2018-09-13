@@ -8,7 +8,7 @@ Vue.use(Vuex);
 
 const debug = process.env.NODE_ENV !== 'production';
 
-const state = {
+const initState = {
   title: 'Welcome',
   subtext: 'This is subtext',
 };
@@ -42,7 +42,7 @@ const mutations = {
 };
 
 const store = new Vuex.Store({
-  state,
+  state: initState,
   actions,
   getters,
   mutations,
@@ -62,8 +62,8 @@ if (module.hot) {
   ], () => {
     store.hotUpdate({
       modules: {
-        calendars: require('./modules/calendars').default,
-        todos: require('./modules/todos').default,
+        calendars: require('./modules/calendars').default, // eslint-disable-line
+        todos: require('./modules/todos').default, // eslint-disable-line
       },
     });
   });

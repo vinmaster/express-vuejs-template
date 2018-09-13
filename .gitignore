@@ -1,7 +1,12 @@
 .DS_Store
+.Spotlight-V100
+.Trashes
+Thumbs.db
 node_modules/
+npm-debug.log
 *.log
 .env
 bundle.js
 bundle.*.js
 webpack-assets.json
+*.sqlite

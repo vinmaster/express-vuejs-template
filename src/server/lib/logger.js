@@ -1,12 +1,23 @@
 const winston = require('winston');
 
+const { createLogger, format, transports } = winston;
+
 const winstonTransports = process.env.NODE_ENV === 'test' ? [] : [
-  new winston.transports.Console({
-    json: false,
-    colorize: true,
-  }),
+  new transports.Console(),
 ];
 
-const logger = winston.createLogger({ transports: winstonTransports });
+const logger = createLogger({
+  format: format.combine(
+    format.colorize(),
+    format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss ZZ' }),
+    format.printf(info => `[${info.timestamp}] [${info.level}] ${info.message}`),
+  ),
+  transports: winstonTransports,
+});
+logger.stream = {
+  write: (message, _encoding) => {
+    logger.info(message);
+  },
+};
 
 module.exports = logger;

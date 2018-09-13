@@ -1,4 +1,4 @@
-const state = {
+const initState = {
   todos: [],
 };
 
@@ -23,7 +23,7 @@ const mutations = {
 };
 
 export default {
-  state,
+  state: initState,
   getters,
   actions,
   mutations,
