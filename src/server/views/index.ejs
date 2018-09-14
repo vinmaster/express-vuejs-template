@@ -20,7 +20,7 @@
 <body>
   <div id="app"></div>
 
-  <script type="text/javascript" src="/js/jquery-3.2.0.min.js"></script>
+  <!-- <script type="text/javascript" src="/js/jquery-3.2.0.min.js"></script> -->
   <script src="/js/materialize.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <% if (locals.scripts) { %>
@@ -28,6 +28,9 @@
       <script src="<%= scriptUrl %>"></script>
     <% }) %>
   <% } %>
+  <script>
+    M.AutoInit();
+  </script>
 </body>
 
 </html>

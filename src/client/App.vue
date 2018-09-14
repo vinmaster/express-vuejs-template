@@ -1,21 +1,18 @@
 <template>
   <div id="app">
-    <nav>
-      <div class="blue nav-wrapper">
-        <ul>
-          <li><router-link to="/">Home</router-link></li>
-          <li><router-link to="/todos">Todos</router-link></li>
-          <li><router-link to="/calendars">Calendars</router-link></li>
-        </ul>
-      </div>
-    </nav>
+    <app-nav></app-nav>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+import Nav from 'components/Nav'
+
 export default {
-  name: 'app'
+  name: 'app',
+  components: {
+    'app-nav': Nav,
+  },
 }
 </script>
 

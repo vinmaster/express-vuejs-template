@@ -7,14 +7,22 @@ const env = process.env.NODE_ENV || 'development';
 const models = {};
 
 let sequelize;
-if (env === 'development') {
+
+if (process.env.DATABASE_URL) {
+  sequelize = new Sequelize(process.env.DATABASE_URL, {
+    dialect: 'postgres',
+    ssl: true,
+    dialectOptions: {
+      ssl: true,
+    },
+  });
+} else if (env === 'development' || !process.env.DATABASE_URL) {
   sequelize = new Sequelize('database', 'username', 'password', {
     dialect: 'sqlite',
-
-    // the storage engine for sqlite
-    // - default ':memory:'
-    storage: './development.sqlite',
+    storage: `./${env}.sqlite`,
   });
+} else {
+  throw new Error('Cannot setup database connection');
 }
 
 fs

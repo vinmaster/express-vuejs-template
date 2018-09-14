@@ -6,32 +6,55 @@ const apiRouter = express.Router();
 const Logger = require(`${process.cwd()}/src/server/lib/logger`);
 const Helper = require(`${process.cwd()}/src/server/lib/helper`);
 const ApplicationController = require(`${process.cwd()}/src/server/controllers/application`);
+const UsersController = require(`${process.cwd()}/src/server/controllers/users`);
 const CalendarsController = require(`${process.cwd()}/src/server/controllers/calendars`);
+const Models = require(`${process.cwd()}/src/server/models/index`);
+const { User } = Models;
 const limiter = new RateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 500, // Limit requests per window
   delayMs: 0,
   skip: Helper.skipReq,
 });
-const passSessionUserToView = (req, res, next) => {
-  const keysToPass = ['userId', 'username'];
-  if (req.session && keysToPass.every(key => Object.keys(req.session).includes(key))) {
-    Helper.updateObjectWithSource(res.locals, req.session, { allowed: keysToPass });
+
+const auth = async (req, res, next) => {
+  let token;
+  if (req.headers.authorization) {
+    const { authorization } = req.headers;
+    [, token] = authorization.split(' ');
+  } else {
+    token = req.query.token || req.body.token;
   }
-  next();
+  if (!token) return next(Helper.createError('Missing token', 401));
+  const decodedToken = Helper.jwtVerify(token);
+  if (!decodedToken) return next(Helper.createError('Invalid token', 401));
+  const user = await User.findOne({ where: { id: decodedToken.userId } });
+  if (user) {
+    req.user = user;
+    next();
+  } else {
+    next(Helper.createError('Invalid token', 401));
+  }
 };
 
+const optionalAuth = (req, res, next) => Helper.auth(req, res, _ => {
+  // Throw away error if auth failed
+  next();
+});
+
 router.use(limiter);
-router.use(passSessionUserToView);
 
 // Render home page
-const homeRoutes = ['/', '/todos', '/calendars'];
+const homeRoutes = ['/', '/register', '/login', '/logout', '/todos', '/calendars'];
 router.get(homeRoutes, ApplicationController.index);
-router.get('/test', ApplicationController.test);
-router.get('/error', ApplicationController.error);
+router.get('/test', optionalAuth, Helper.asyncWrap(ApplicationController.test));
+router.get('/error', Helper.asyncWrap(ApplicationController.error));
 
 router.use('/api', apiRouter);
-apiRouter.get('/calendars', CalendarsController.index);
+apiRouter.get('/calendars', auth, CalendarsController.index);
+apiRouter.post('/users/register', Helper.asyncWrap(UsersController.register));
+apiRouter.post('/users/login', Helper.asyncWrap(UsersController.login));
+apiRouter.post('/users/logout', auth, Helper.asyncWrap(UsersController.logout));
 
 // Create 404 Not Found for next middleware
 apiRouter.use((req, res, next) => {

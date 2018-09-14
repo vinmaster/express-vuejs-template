@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <h1 class="col s12 center">{{ title }}</h1>
+    <h1 class="col s12 center">{{ title }} {{ username }}</h1>
     <div class="input-field col s6 offset-s3">
       <input v-on:input="changeTitle($event.target.value)" v-bind:value="title" />
       <label class="active">Change title: </label>
@@ -22,6 +22,7 @@ export default {
   computed: {
     ...mapGetters([
       'title',
+      'username',
     ]),
     ...mapGetters({
       storeSubtext: 'subtext'

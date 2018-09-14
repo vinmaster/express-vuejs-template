@@ -11,9 +11,10 @@ module.exports = class ApplicationController {
     Helper.renderSuccessJson(res, { config: 'test' });
   }
 
-  static error(req, res, next) {
+  static error(_req, _res, _next) {
     Logger.error('THIS IS TEST ERROR');
-    next(new Error('This is an error and it should be logged to the console'));
+    // next(new Error('This is an error and it should be logged to the console'));
+    throw Helper.createError('This is an test error');
     // Helper.renderBadJson(res, 'test')
   }
 

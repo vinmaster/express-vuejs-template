@@ -1,5 +1,7 @@
+const JWT_EXPIRES_IN = '7d'; // 7 days
 const app = require('express')();
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 
 const Helper = {
   // Success JSON
@@ -71,6 +73,13 @@ const Helper = {
     return errors;
   },
 
+  verifyParamsBang(query, ...params) {
+    const missingParams = Helper.verifyParams(query, ...params);
+    if (missingParams.length !== 0) {
+      throw Helper.createError(`Missing ${missingParams.join(', ')}`);
+    }
+  },
+
   updateObjectWithSource(object, source, {
     allowed: attributes = Object.keys(source),
   } = {}) {
@@ -78,6 +87,20 @@ const Helper = {
       if (source[key] !== undefined) {
         object[key] = source[key];
       }
+    }
+  },
+
+  jwtSign(payload, expiresIn = JWT_EXPIRES_IN) {
+    // Generate token
+    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
+  },
+
+  jwtVerify(token) {
+    try {
+      // Verify and decode
+      return jwt.verify(token, process.env.JWT_SECRET);
+    } catch (e) {
+      return null;
     }
   },
 

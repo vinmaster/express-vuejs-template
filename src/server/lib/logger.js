@@ -1,8 +1,12 @@
 const winston = require('winston');
 
 const { createLogger, format, transports } = winston;
+const emptyTransport = {
+  log: () => {},
+  on: () => {},
+};
 
-const winstonTransports = process.env.NODE_ENV === 'test' ? [] : [
+const winstonTransports = process.env.NODE_ENV === 'test' ? [emptyTransport] : [
   new transports.Console(),
 ];
 

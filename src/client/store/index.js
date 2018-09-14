@@ -1,44 +1,26 @@
+/* eslint-disable global-require */
+
 import Vue from 'vue';
 import Vuex from 'vuex';
 import createLogger from 'client/lib/logger';
+import Api from 'client/api';
 import calendars from './modules/calendars';
 import todos from './modules/todos';
+import actions from './actions';
+import getters from './getters';
+import mutations from './mutations';
 
 Vue.use(Vuex);
 
 const debug = process.env.NODE_ENV !== 'production';
 
 const initState = {
+  isLoading: false,
+  alerts: {},
+  token: localStorage.getItem('token') || null,
+  username: localStorage.getItem('username') || null,
   title: 'Welcome',
   subtext: 'This is subtext',
-};
-
-const types = {
-  CHANGE_TITLE: 'CHANGE_TITLE',
-  CHANGE_SUBTEXT: 'CHANGE_SUBTEXT',
-};
-
-const getters = {
-  title: state => state.title,
-  subtext: state => state.subtext,
-};
-
-const actions = {
-  changeTitle({ commit }, title) {
-    commit(types.CHANGE_TITLE, { title });
-  },
-  changeSubtext({ commit }, subtext) {
-    commit(types.CHANGE_SUBTEXT, { subtext });
-  },
-};
-
-const mutations = {
-  [types.CHANGE_TITLE](state, { title }) {
-    state.title = title;
-  },
-  [types.CHANGE_SUBTEXT](state, { subtext }) {
-    state.subtext = subtext;
-  },
 };
 
 const store = new Vuex.Store({
@@ -54,16 +36,29 @@ const store = new Vuex.Store({
   plugins: debug ? [createLogger()] : [],
 });
 
+Api.init(store);
+if (initState.token) {
+  Api.setToken(initState.token);
+}
+
 // Hot reload each modules
 if (module.hot) {
   module.hot.accept([
+    './actions',
+    './getters',
+    './mutations',
+    './types',
     './modules/calendars',
     './modules/todos',
   ], () => {
     store.hotUpdate({
+      actions: require('./actions').default,
+      getters: require('./getters').default,
+      mutations: require('./mutations').default,
+      types: require('./types').default,
       modules: {
-        calendars: require('./modules/calendars').default, // eslint-disable-line
-        todos: require('./modules/todos').default, // eslint-disable-line
+        calendars: require('./modules/calendars').default,
+        todos: require('./modules/todos').default,
       },
     });
   });

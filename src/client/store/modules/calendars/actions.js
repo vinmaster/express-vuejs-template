@@ -1,7 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 
-import Api from 'store/api';
-import types from './mutation-types';
+import Api from 'client/api';
+import types from './types';
 
 export const getCalendars = ({ commit }) => {
   Api.getCalendars().then(response => {

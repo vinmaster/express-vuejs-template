@@ -1,15 +1,10 @@
 const express = require('express');
-const session = require('express-session');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
 const webpackAssets = require('express-webpack-assets');
 const morgan = require('morgan');
 
-const Helper = require(`${process.cwd()}/src/server/lib/helper`);
-const Logger = require(`${process.cwd()}/src/server/lib/logger`);
-const Sockets = require(`${process.cwd()}/src/server/sockets`);
-const routes = require(`${process.cwd()}/src/server/routes`);
 const port = process.env.PORT || 8000;
 const app = express(); // Create express application
 const server = require('http').createServer(app);
@@ -30,6 +25,11 @@ process.on('uncaughtException', error => {
   throw error;
 });
 
+const Helper = require(`${process.cwd()}/src/server/lib/helper`);
+const Logger = require(`${process.cwd()}/src/server/lib/logger`);
+const Sockets = require(`${process.cwd()}/src/server/sockets`);
+const routes = require(`${process.cwd()}/src/server/routes`);
+
 // Morgan
 if (app.get('env') === 'development') {
   app.use(morgan('dev', { skip: Helper.skipReq, stream: Logger.stream }));
@@ -39,22 +39,10 @@ if (app.get('env') === 'development') {
 
 const models = require(`${process.cwd()}/src/server/models/index`);
 const force = process.env.DB_FORCE_SYNC === 'true';
-const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 models.sequelize.sync({ force }).then(() => {
   console.log('Sequelize synced'); // eslint-disable-line no-console
 });
-
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  store: new SequelizeStore({
-    // checkExpirationInterval: 60 * 60 * 1000, // 60 minutes. The interval at which to cleanup expired sessions in milliseconds.
-    // expiration: 7 * 24 * 60 * 60 * 1000, // 7 days. The maximum age (in milliseconds) of a valid session.
-    db: models.sequelize,
-  }),
-}));
 
 // Dev mode
 if (app.get('env') === 'development') {

@@ -7,7 +7,7 @@ import store from 'client/store';
 import { sync } from 'vuex-router-sync';
 import Websocket from 'client/lib/websocket';
 
-Vue.use(Websocket);
+Vue.use(Websocket, undefined, { reconnectionAttempts: 3 });
 
 sync(store, router);
 
