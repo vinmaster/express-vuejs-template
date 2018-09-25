@@ -2,7 +2,6 @@
   <div class="row center-align">
     <div class="col s12 m4 offset-m4">
       <h1 class="col s12 center">Login</h1>
-      <alert v-bind:alerts="alerts"></alert>
       <form @submit.prevent="login({ username, password })">
         <div class="input-field col s12">
           <label for="username" class="active">Username</label>
@@ -20,18 +19,9 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import Alert from './Alert'
 
 export default {
   name: 'login',
-  components: {
-    'alert': Alert,
-  },
-  computed: {
-    ...mapGetters([
-      'alerts',
-    ]),
-  },
   methods: {
     ...mapActions([
       'login',

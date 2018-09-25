@@ -28,7 +28,7 @@ const auth = async (req, res, next) => {
   if (!token) return next(Helper.createError('Missing token', 401));
   const decodedToken = Helper.jwtVerify(token);
   if (!decodedToken) return next(Helper.createError('Invalid token', 401));
-  const user = await User.findOne({ where: { id: decodedToken.userId } });
+  const user = await User.findById(decodedToken.userId);
   if (user) {
     req.user = user;
     next();
@@ -51,10 +51,12 @@ router.get('/test', optionalAuth, Helper.asyncWrap(ApplicationController.test));
 router.get('/error', Helper.asyncWrap(ApplicationController.error));
 
 router.use('/api', apiRouter);
+apiRouter.post('/report', Helper.asyncWrap(ApplicationController.report));
 apiRouter.get('/calendars', auth, CalendarsController.index);
 apiRouter.post('/users/register', Helper.asyncWrap(UsersController.register));
 apiRouter.post('/users/login', Helper.asyncWrap(UsersController.login));
 apiRouter.post('/users/logout', auth, Helper.asyncWrap(UsersController.logout));
+apiRouter.post('/users/refresh', Helper.asyncWrap(UsersController.refresh));
 
 // Create 404 Not Found for next middleware
 apiRouter.use((req, res, next) => {
@@ -65,7 +67,6 @@ apiRouter.use((err, req, res, _next) => {
   const {
     status, message, info, error,
   } = Helper.digestError(err);
-  // Logger.error(error);
   Logger.error(`${error.message}\n${error.stack}`);
 
   res.status(status).json({
@@ -84,16 +85,10 @@ router.use((req, res, next) => {
 });
 router.use((err, req, res, _next) => {
   const {
-    status, message, error,
-  } = Helper.digestError(err);
-  let {
-    info,
-  } = Helper.digestError(err);
-  // Logger.error(error);
+    status, message, error, info,
+  } = Helper.digestError(err, { html: true });
   Logger.error(`${error.message}\n${error.stack}`);
-  info = error.stack.replace(/(?:\r\n|\r|\n)/g, '<br/>');
-  info = info.replace(/ /g, '&nbsp;');
-  info = info.replace(/[a-z_-\d]+.js:\d+:\d+/gi, '<mark>$&</mark>');
+
   return res.status(status).render('error', {
     title: `${status} - ${message}`,
     status,

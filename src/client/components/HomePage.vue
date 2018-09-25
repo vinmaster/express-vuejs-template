@@ -25,7 +25,7 @@ export default {
       'username',
     ]),
     ...mapGetters({
-      storeSubtext: 'subtext'
+      storeSubtext: 'subtext',
     }),
     subtext: {
       get() { return this.storeSubtext },
@@ -38,31 +38,30 @@ export default {
       'changeSubtext',
     ]),
     serverChangeSubtext() {
-      this.$socket.emit("sendText", { text: this.subtext })
+      this.$socket.emit('sendText', { text: this.subtext });
     }
   },
   socket: {
     events: {
       sendText(msg) {
-        this.changeSubtext(msg)
+        this.changeSubtext(msg);
       },
       connect() {
-        console.log('socket connected')
+        console.log('socket connected');
       },
       disconnect() {
-        console.log('socket disconnected')
+        console.log('socket disconnected');
       },
       CONNECTED(data) {
-        console.log('socket CONNECTED', data)
+        console.log('socket CONNECTED', data);
       },
       DISCONNECTED(data) {
-        console.log('socket DISCONNECTED', data)
+        console.log('socket DISCONNECTED', data);
       },
-      error(err) { console.error(err) }
     }
   },
   data() {
-    return {}
+    return {};
   }
 }
 </script>

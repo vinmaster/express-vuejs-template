@@ -1,5 +1,5 @@
 <template>
-  <div class="row center-align">
+  <div class="center-align">
     <div>
       <div v-show="alerts.success" class="green lighten-4 green-text text-darken-4 chip">
         {{ alerts.success }}

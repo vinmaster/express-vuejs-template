@@ -7,6 +7,12 @@ module.exports = class ApplicationController {
     res.render('index', { title: 'Express vuejs template', scripts: [bundlePath] });
   }
 
+  static report(req, res, _next) {
+    const { body } = req;
+    Logger.error(`Client side error: ${body.message}\t${body.source}\n${body.stack}\n${JSON.stringify(body.events)}`);
+    Helper.renderSuccessJson(res, { message: 'Reported' });
+  }
+
   static config(req, res, _next) {
     Helper.renderSuccessJson(res, { config: 'test' });
   }

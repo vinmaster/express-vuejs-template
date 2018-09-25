@@ -3,6 +3,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import createLogger from 'client/lib/logger';
+import reporter from 'client/lib/reporter';
 import Api from 'client/api';
 import calendars from './modules/calendars';
 import todos from './modules/todos';
@@ -15,9 +16,13 @@ Vue.use(Vuex);
 const debug = process.env.NODE_ENV !== 'production';
 
 const initState = {
+  route: {
+    fullPath: null,
+  },
   isLoading: false,
   alerts: {},
   token: localStorage.getItem('token') || null,
+  refreshToken: localStorage.getItem('refreshToken') || null,
   username: localStorage.getItem('username') || null,
   title: 'Welcome',
   subtext: 'This is subtext',
@@ -33,13 +38,10 @@ const store = new Vuex.Store({
     todos,
   },
   strict: debug,
-  plugins: debug ? [createLogger()] : [],
+  plugins: debug ? [createLogger(), reporter.recorder] : [reporter.recorder],
 });
 
 Api.init(store);
-if (initState.token) {
-  Api.setToken(initState.token);
-}
 
 // Hot reload each modules
 if (module.hot) {

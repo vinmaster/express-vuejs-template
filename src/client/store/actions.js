@@ -17,6 +17,7 @@ export default {
         commit(types.SET_ALERTS, { error: e.response.data.error.message });
       } else {
         commit(types.SET_ALERTS, { error: e.message });
+        throw e;
       }
     }
     commit(types.SET_LOADING, false);
@@ -25,15 +26,17 @@ export default {
     commit(types.SET_LOADING, true);
     try {
       const response = await Api.login({ username, password });
-      // payload keys: token, username
+      // payload keys: token, refreshToken, username
       commit(types.USER_LOGIN, response.data.payload);
       Api.setToken(response.data.payload.token);
+      Api.setRefreshToken(response.data.payload.refreshToken);
       router.push('/');
     } catch (e) {
       if (e.response) {
         commit(types.SET_ALERTS, { error: e.response.data.error.message });
       } else {
         commit(types.SET_ALERTS, { error: e.message });
+        throw e;
       }
     }
     commit(types.SET_LOADING, false);

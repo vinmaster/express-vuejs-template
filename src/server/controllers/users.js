@@ -14,7 +14,7 @@ module.exports = class UsersController {
       throw Helper.createError('Error registering');
     }
     const token = Helper.jwtSign({ userId: user.id });
-    Helper.renderSuccessJson(res, { token, username });
+    Helper.renderSuccessJson(res, { token, refreshToken: user.refreshToken, username });
   }
 
   static async login(req, res, _next) {
@@ -27,10 +27,24 @@ module.exports = class UsersController {
     user.lastLoginAt = new Date();
     user = await user.save();
     const token = Helper.jwtSign({ userId: user.id });
-    Helper.renderSuccessJson(res, { token, username });
+    Helper.renderSuccessJson(res, { token, refreshToken: user.refreshToken, username });
   }
 
-  static logout(req, res, _next) {
-    Helper.renderSuccessJson(res, 'Logging out');
+  static async logout(req, res, _next) {
+    const { user } = req;
+    user.refreshToken = null;
+    await user.save();
+    Helper.renderSuccessJson(res, 'Logged out');
+  }
+
+  static async refresh(req, res, _next) {
+    const { refreshToken } = req.body;
+    Helper.verifyParamsBang(req.body, 'refreshToken');
+    const user = await User.findOne({ where: { refreshToken } });
+    if (!user) {
+      throw Helper.createError('Refresh token not found');
+    }
+    const token = Helper.jwtSign({ userId: user.id });
+    Helper.renderSuccessJson(res, { token, refreshToken: user.refreshToken, username: user.username });
   }
 };

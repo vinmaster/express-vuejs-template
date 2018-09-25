@@ -11,7 +11,7 @@ class Sockets {
       const sockets = this.io.sockets.connected;
       return Object.keys(sockets);
     }
-    Logger.log('this.io is not set');
+    Logger.info('this.io is not set');
   }
 
   static connectionCallback(socket) {

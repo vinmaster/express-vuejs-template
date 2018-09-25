@@ -22,9 +22,7 @@
     <div class="col card hoverable s10 offset-s1">
       <div class="card-content">
         <h3 class="center-align">Uh oh! <%= locals.status %> - <%= locals.message %></h3>
-        <% if (process.env.NODE_ENV === 'development') { %>
-          <div><%- locals.info %></div>
-        <% } %>
+        <div><%- locals.info %></div>
       </div>
     </div>
   </div>

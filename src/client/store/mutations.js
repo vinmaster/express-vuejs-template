@@ -17,14 +17,17 @@ export default {
   //   localStorage.setItem('token', token);
   //   localStorage.setItem('username', username);
   // },
-  [types.USER_LOGIN](state, { token, username }) {
+  [types.USER_LOGIN](state, { token, refreshToken, username }) {
     state.token = token;
+    state.refreshToken = refreshToken;
     state.username = username;
     localStorage.setItem('token', token);
+    localStorage.setItem('refreshToken', refreshToken);
     localStorage.setItem('username', username);
   },
   [types.USER_LOGOUT](state) {
     state.token = null;
+    state.refreshToken = null;
     state.username = null;
     localStorage.clear();
   },

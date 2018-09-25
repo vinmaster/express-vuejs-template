@@ -1,4 +1,4 @@
-const JWT_EXPIRES_IN = '7d'; // 7 days
+const JWT_EXPIRES_IN = '30m'; // 30 minutes
 const app = require('express')();
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
@@ -24,7 +24,7 @@ const Helper = {
     return err;
   },
 
-  digestError(error) {
+  digestError(error, { html = false } = {}) {
     if (!(error instanceof Error)) {
       error = Helper.createError(error);
     }
@@ -33,7 +33,18 @@ const Helper = {
     if (status === 500) {
       message = 'Internal server error';
     }
-    const info = ['development', 'test'].includes(Helper.env) ? Helper.stringify(error.stack) : error.message;
+    let info;
+    if (['development', 'test'].includes(Helper.env)) {
+      if (html) {
+        info = error.stack.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+        info = info.replace(/ /g, '&nbsp;');
+        info = info.replace(/[a-z_-\d]+.js:\d+:\d+/gi, '<mark>$&</mark>');
+      } else {
+        info = Helper.stringify(error.stack);
+      }
+    } else if (!html) {
+      info = error.message;
+    }
     return {
       status,
       message,

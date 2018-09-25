@@ -49,7 +49,13 @@ const router = new Router({
 
 // Clear alerts when navigating
 router.beforeEach((_to, _from, next) => {
-  store.commit('SET_ALERTS', {});
+  if (store.state.alerts
+    && (store.state.alerts.success
+    || store.state.alerts.info
+    || store.state.alerts.warning
+    || store.state.alerts.error)) {
+    store.commit('SET_ALERTS', {});
+  }
   next();
 });
 
