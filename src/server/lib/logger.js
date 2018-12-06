@@ -6,9 +6,12 @@ const emptyTransport = {
   on: () => {},
 };
 
-const winstonTransports = process.env.NODE_ENV === 'test' ? [emptyTransport] : [
-  new transports.Console(),
-];
+const appTransports = [new transports.Console()];
+if (process.env.LOG_FILE !== undefined && process.env.LOG_FILE !== '') {
+  appTransports.push(new (winston.transports.File)({ filename: process.env.LOG_FILE }));
+}
+
+const winstonTransports = process.env.NODE_ENV === 'test' ? [emptyTransport] : appTransports;
 
 const logger = createLogger({
   format: format.combine(
