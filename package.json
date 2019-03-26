@@ -15,6 +15,7 @@
     "build": "npm run clean; webpack --config ./config/webpack.prod.config.js --progress --colors",
     "postinstall": "npm run build",
     "dev": "nodemon -e 'js' -i 'src/client' -i 'public' --inspect=5858 src/server/index.js",
+    "test-ci": "NODE_ENV=test mocha --exit",
     "test": "NODE_ENV=test nodemon --exec 'mocha -G --inspect=5858' || exit 0",
     "lint": "eslint --ignore-pattern 'public' ./ || exit 0"
   },
