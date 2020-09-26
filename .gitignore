@@ -1,12 +1,14 @@
+# OS
 .DS_Store
 .Spotlight-V100
 .Trashes
 Thumbs.db
-node_modules/
-npm-debug.log
+
+# NPM
+node_modules
+npm-debug.log# App
+
+# Project
+build
 *.log
 .env
-bundle.js
-bundle.*.js
-webpack-assets.json
-*.sqlite

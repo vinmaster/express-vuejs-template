@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "rootDir": "server",
+    "outDir": "build",
+    "target": "es5",
+    "module": "commonjs",
+    "strict": true,
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "lib": [
+      "esnext"
+    ]
+  },
+  "include": [
+    "src/server/**/*.ts",
+    "src/common/**/*.ts",
+    "tests/**/*.ts",
+    "tests/**/*.tsx"
+  ],
+  "exclude": [
+    "client",
+    "./tests/",
+    "node_modules"
+  ]
+}

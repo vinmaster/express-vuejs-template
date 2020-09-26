@@ -1,3 +1,0 @@
-export default {
-  FETCHED_CALENDARS: 'FETCHED_CALENDARS',
-};
