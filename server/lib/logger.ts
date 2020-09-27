@@ -33,7 +33,8 @@ const options = {
   },
 };
 
-const logTransports = [new transports.File(options.file), new transports.Console(options.console)];
+const logTransports: any[] = [new transports.File(options.file)];
+if (Utility.env !== 'test') logTransports.push(new transports.Console(options.console));
 
 export let Logger: winston.Logger;
 

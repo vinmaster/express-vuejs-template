@@ -8,6 +8,7 @@
     "importHelpers": true,
     "moduleResolution": "node",
     "noImplicitAny": false,
+    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -15,7 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": [
-        "src/*"
+        "server/*"
       ]
     },
     "lib": [
@@ -23,14 +24,12 @@
     ]
   },
   "include": [
-    "src/server/**/*.ts",
-    "src/common/**/*.ts",
+    "server/**/*.ts",
+    "common/**/*.ts",
     "tests/**/*.ts",
-    "tests/**/*.tsx"
   ],
   "exclude": [
     "client",
-    "./tests/",
     "node_modules"
   ]
 }

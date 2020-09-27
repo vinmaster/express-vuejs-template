@@ -39,6 +39,14 @@ export class Utility {
     }, {});
   }
 
+  static apiRender(res, payload, status = 200) {
+    res.status(status).send({
+      status,
+      payload,
+      error: null,
+    });
+  }
+
   static createError(message, status = 400) {
     let error = message;
     if (!(error instanceof Error)) {
@@ -47,5 +55,9 @@ export class Utility {
     }
     error.status = status;
     return error;
+  }
+
+  static isObject(variable) {
+    return Object.prototype.toString.call(variable) === '[object Object]';
   }
 }

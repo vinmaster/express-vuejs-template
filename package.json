@@ -55,10 +55,13 @@
     "ms": "^2.1.2",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
+    "pg": "^8.3.3",
     "rate-limiter-flexible": "^2.1.10",
+    "reflect-metadata": "^0.1.13",
     "serve-favicon": "^2.5.0",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
+    "typeorm": "^0.2.26",
     "typescript": "^4.0.3",
     "uuid": "^8.3.0",
     "winston": "^3.3.3"
