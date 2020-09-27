@@ -36,7 +36,12 @@ registerLogger(app);
 // Secure http headers
 app.use(helmet());
 // Allow cors
-app.use(cors({ origin: process.env.DOMAIN }));
+app.use(
+  cors({
+    credentials: true,
+    origin: process.env.DOMAIN && (process.env.DOMAIN.split(',') as string[]),
+  })
+);
 // Rate limiting
 app.use(rateLimiter());
 // Help serve favicon and skip logging
