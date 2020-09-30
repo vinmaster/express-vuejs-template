@@ -48,6 +48,7 @@
     "cross-env": "^7.0.2",
     "ejs": "^3.1.5",
     "express": "^5.0.0-alpha.8",
+    "express-validator": "^6.6.1",
     "helmet": "^4.1.1",
     "hpp": "^0.2.3",
     "jsonwebtoken": "^8.5.1",

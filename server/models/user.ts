@@ -7,6 +7,8 @@ import {
   Index,
   CreateDateColumn,
   UpdateDateColumn,
+  BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
 import { comparePassword, hashPassword } from '../lib/authentication';
 import { Utility } from '../lib/utility';
@@ -39,6 +41,16 @@ export class User extends BaseEntity {
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt!: Date;
 
+  public password!: string;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  async hashPassword() {
+    if (this.password) {
+      this.passwordHash = await hashPassword(this.password);
+    }
+  }
+
   toJson() {
     const json = { ...this } as any;
     // @ts-ignore
@@ -48,6 +60,7 @@ export class User extends BaseEntity {
     json.createdAt = json.createdAt.toString();
     json.updatedAt = json.updatedAt.toString();
     if (json.lastLoginAt) json.lastLoginAt = json.lastLoginAt.toString();
+    delete json['password'];
     return json;
   }
 
@@ -70,7 +83,8 @@ export class User extends BaseEntity {
     const user = new User();
     user.email = email;
     user.username = username;
-    user.passwordHash = await hashPassword(password);
+    // user.passwordHash = await hashPassword(password);
+    user.password = password;
     await user.save();
     return user;
   }

@@ -13,6 +13,7 @@ export async function connectDatabase() {
       entities: [path.join(__dirname, '../models/*.ts')],
       logging: Utility.env !== 'test',
       synchronize: true,
+      subscribers: [path.join(__dirname, '../models/hooks.ts')],
     });
   } catch (error) {
     if (error.name === 'AlreadyHasActiveConnectionError') {

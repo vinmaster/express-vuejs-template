@@ -14,7 +14,7 @@ describe('Users', () => {
   describe('register', () => {
     it('should register users', async () => {
       const res = await supertest(app).post('/api/users/register').send({
-        email: 'test',
+        email: 'test@example.com',
         username: 'test',
         password: 'test',
       });
@@ -29,7 +29,7 @@ describe('Users', () => {
     });
 
     it('should not register taken username', async () => {
-      const userData = { email: 'email', username: 'username', password: 'password' };
+      const userData = { email: 'email@example.com', username: 'username', password: 'password' };
       let user = await User.register(userData);
 
       const res = await supertest(app).post('/api/users/register').send(userData);
@@ -42,7 +42,9 @@ describe('Users', () => {
       const res = await supertest(app).post('/api/users/register').send({});
 
       expect(res.status).eq(400);
-      expect(res.body.error).eq('Missing email, username, password');
+      expect(res.body.error).eq(
+        'Email is required, Email is not valid, Username is required, Password is required'
+      );
     });
   });
 
@@ -109,7 +111,7 @@ describe('Users', () => {
         .set('Cookie', `refreshToken=${token}`);
 
       expect(res.status).eq(200);
-      expect(res.body.payload).eq(null);
+      expect(res.body.payload).deep.eq(user.toJson());
       expect(res.body.error).eq(null);
     });
 
@@ -139,7 +141,7 @@ describe('Users', () => {
         .set('Cookie', `accessToken=${token}`);
 
       expect(res.status).eq(200);
-      expect(res.body.payload).eq(user.id);
+      expect(res.body.payload).deep.eq(user.toJson());
       expect(res.body.error).eq(null);
     });
 

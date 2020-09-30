@@ -32,6 +32,15 @@ export class Utility {
     return str === val.toString() ? util.inspect(val) : str;
   }
 
+  static capitalize(str: string) {
+    if (typeof str !== 'string') return str;
+
+    return str
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
+
   static getObjectSlice(obj, keys: string[]) {
     return keys.reduce((acc, current) => {
       acc[current] = obj[current];
