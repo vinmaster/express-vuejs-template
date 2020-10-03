@@ -8,9 +8,9 @@
     "npm": "~6.10.0"
   },
   "scripts": {
-    "start": "npm build && npm run server",
-    "server": "node build/server/index.js",
-    "start-prod": "NODE_ENV=production npm start",
+    "start": "npm run server",
+    "server": "node build/index.js",
+    "server-prod": "NODE_ENV=production npm start",
     "build": "npm run clean && npm run build-client && npm run build-server",
     "build-client": "vue-cli-service build client/index.ts",
     "build-server": "tsc --build tsconfig.server.json",
@@ -19,7 +19,8 @@
     "dev-client": "echo 'TODO'",
     "dev-server": "ts-node-dev --project tsconfig.server.json --inspect=4321 --respawn --no-notify ./server/index.ts",
     "test-watch": "cross-env NODE_ENV=test TS_NODE_PROJECT=tsconfig.server.json mocha -r ts-node/register --watch --watch-files server, tests/**/*.spec.ts",
-    "test": "cross-env NODE_ENV=test TS_NODE_PROJECT=tsconfig.server.json mocha -r ts-node/register \"tests/**/*.spec.ts\""
+    "test": "cross-env NODE_ENV=test TS_NODE_PROJECT=tsconfig.server.json mocha -r ts-node/register \"tests/**/*.spec.ts\"",
+    "heroku-postbuild": "npm run build-server && cd client && npm run build && cd .. && cp -R client/dist build/public"
   },
   "dependencies": {
     "@types/bcrypt": "^3.0.0",

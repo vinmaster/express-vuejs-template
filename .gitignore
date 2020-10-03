@@ -10,5 +10,6 @@ npm-debug.log# App
 
 # Project
 build
+client/dist
 *.log
 .env

@@ -26,9 +26,9 @@
   "include": [
     "server/**/*.ts",
     "common/**/*.ts",
-    "tests/**/*.ts",
   ],
   "exclude": [
+    "tests",
     "client",
     "node_modules"
   ]
