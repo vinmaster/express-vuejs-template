@@ -1,4 +1,4 @@
-import { util } from 'chai';
+import util from 'util';
 
 export class Utility {
   public static env = (process.env.NODE_ENV || 'development').toLowerCase();
