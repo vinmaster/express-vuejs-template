@@ -20,7 +20,7 @@
     "dev-server": "ts-node-dev --project tsconfig.server.json --inspect=4321 --respawn --no-notify ./server/index.ts",
     "test-watch": "cross-env NODE_ENV=test TS_NODE_PROJECT=tsconfig.server.json mocha -r ts-node/register --watch --watch-files server, tests/**/*.spec.ts",
     "test": "cross-env NODE_ENV=test TS_NODE_PROJECT=tsconfig.server.json mocha -r ts-node/register \"tests/**/*.spec.ts\"",
-    "heroku-postbuild": "npm run build-server && cd client && npm run build && cd .. && cp -R client/dist build/public"
+    "heroku-postbuild": "npm run build-server && cd client && npm i && npm run build && cd .. && cp -R client/dist build/public"
   },
   "dependencies": {
     "@types/bcrypt": "^3.0.0",
