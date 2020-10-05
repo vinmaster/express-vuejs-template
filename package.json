@@ -5,18 +5,18 @@
   "private": true,
   "engines": {
     "node": "~12.18.0",
-    "npm": "~6.10.0"
+    "npm": "~6.14.0"
   },
   "scripts": {
     "start": "npm run server",
     "server": "node build/index.js",
     "server-prod": "NODE_ENV=production npm start",
     "build": "npm run clean && npm run build-client && npm run build-server",
-    "build-client": "vue-cli-service build client/index.ts",
+    "build-client": "vue-cli-service build client/src/index.ts",
     "build-server": "tsc --build tsconfig.server.json",
     "clean": "rm -rf build",
     "dev": "concurrently \"npm:dev-*\"",
-    "dev-client": "echo 'TODO'",
+    "dev-client": "vue-cli-service serve client/src/main.js",
     "dev-server": "ts-node-dev --project tsconfig.server.json --inspect=4321 --respawn --no-notify ./server/index.ts",
     "test-watch": "cross-env NODE_ENV=test TS_NODE_PROJECT=tsconfig.server.json mocha -r ts-node/register --watch --watch-files server, tests/**/*.spec.ts",
     "test": "cross-env NODE_ENV=test TS_NODE_PROJECT=tsconfig.server.json mocha -r ts-node/register \"tests/**/*.spec.ts\"",
@@ -42,12 +42,19 @@
     "@types/socket.io": "^2.1.11",
     "@types/socket.io-client": "^1.4.33",
     "@types/uuid": "^8.3.0",
+    "@vue/cli-plugin-babel": "^4.5.6",
+    "@vue/cli-plugin-eslint": "^4.5.6",
+    "@vue/cli-service": "^4.5.6",
+    "babel-eslint": "^10.1.0",
     "bcrypt": "^5.0.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
+    "core-js": "^3.6.5",
     "cors": "^2.8.5",
     "cross-env": "^7.0.2",
     "ejs": "^3.1.5",
+    "eslint": "^7.10.0",
+    "eslint-plugin-vue": "^7.0.1",
     "express": "^5.0.0-alpha.8",
     "express-validator": "^6.6.1",
     "helmet": "^4.1.1",
@@ -66,6 +73,8 @@
     "typeorm": "^0.2.26",
     "typescript": "^4.0.3",
     "uuid": "^8.3.0",
+    "vue": "^2.6.12",
+    "vue-template-compiler": "^2.6.12",
     "winston": "^3.3.3"
   },
   "devDependencies": {
@@ -78,5 +87,19 @@
     "mocha": "^8.1.3",
     "supertest": "^5.0.0",
     "ts-node-dev": "^1.0.0-pre.63"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {}
   }
 }
