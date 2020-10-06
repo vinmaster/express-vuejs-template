@@ -5,8 +5,9 @@ import SocketIO from 'socket.io-client';
 import vuetify from '@/plugins/vuetify';
 import App from './App.vue';
 import { routes } from './routes';
+import Api from './lib/Api';
 
-const router = new VueRouter({
+export const router = new VueRouter({
   mode: 'history',
   routes,
 });
@@ -25,3 +26,6 @@ new Vue({
   vuetify,
   render: h => h(App),
 }).$mount('#app');
+
+// Refresh on app load
+Api.refreshToken();

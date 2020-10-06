@@ -6,6 +6,8 @@
       centered
       dark
       icons-and-text
+      grow
+      class="rounded-0"
     >
       <v-tabs-slider></v-tabs-slider>
 

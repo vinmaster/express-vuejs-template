@@ -1,6 +1,6 @@
 <template>
   <v-card class="mx-auto">
-    <v-toolbar color="purple" dark>
+    <v-toolbar color="purple" dark class="rounded-0">
       <v-toolbar-title>Profile</v-toolbar-title>
 
       <v-spacer></v-spacer>

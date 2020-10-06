@@ -118,9 +118,17 @@
 
 <script>
 import Api from '../lib/Api';
+import Auth from '../lib/Auth';
+import { router } from '../main';
 
 export default {
   name: 'Login',
+
+  mounted() {
+    if (Auth.isAuthenticated()) {
+      router.push('/');
+    }
+  },
 
   methods: {
     async validate() {

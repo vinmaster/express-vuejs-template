@@ -2,9 +2,9 @@
   <v-card class="mx-auto" color="#26c6da" dark>
     <v-card-title>
       <v-icon large left>
-        mdi-twitter
+        assignment_turned_in
       </v-icon>
-      <span class="title font-weight-light">Twitter</span>
+      <span class="title font-weight-light">Feed</span>
     </v-card-title>
 
     <v-card-text class="headline font-weight-bold">
@@ -28,12 +28,12 @@
 
         <v-row align="center" justify="end">
           <v-icon class="mr-1">
-            mdi-heart
+            favorite
           </v-icon>
           <span class="subheading mr-2">256</span>
           <span class="mr-1">·</span>
           <v-icon class="mr-1">
-            mdi-share-variant
+            share
           </v-icon>
           <span class="subheading">45</span>
         </v-row>
