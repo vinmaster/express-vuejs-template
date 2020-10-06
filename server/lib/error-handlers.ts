@@ -3,12 +3,20 @@ import { Logger } from './logger';
 import { Utility } from './utility';
 
 export function unhandledRejectionHandler(error) {
-  Logger.error(`unhandledRejection ${Utility.stringify(error)}`);
+  if (!Logger) {
+    console.error(`unhandledRejection ${Utility.stringify(error)}`);
+  } else {
+    Logger.error(`unhandledRejection ${Utility.stringify(error)}`);
+  }
   throw error;
 }
 
 export function uncaughtExceptionHandler(error) {
-  Logger.error(`uncaughtException ${Utility.stringify(error)}`);
+  if (!Logger) {
+    console.error(`uncaughtException ${Utility.stringify(error)}`);
+  } else {
+    Logger.error(`uncaughtException ${Utility.stringify(error)}`);
+  }
   throw error;
 }
 

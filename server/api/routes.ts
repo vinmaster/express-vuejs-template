@@ -5,7 +5,6 @@ import usersRoutes from './users';
 
 const apiRoutes = express.Router();
 apiRoutes.use((req, res, next) => {
-  console.log('req header', req.headers);
   if (req.headers['x-requested-with'] !== 'XmlHttpRequest') {
     throw Utility.createError('Forbidden', 403);
   }

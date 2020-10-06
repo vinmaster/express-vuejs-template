@@ -13,11 +13,14 @@ after(async () => await closeDb());
 describe('Users', () => {
   describe('register', () => {
     it('should register users', async () => {
-      const res = await supertest(app).post('/api/users/register').send({
-        email: 'test@example.com',
-        username: 'test',
-        password: 'test',
-      });
+      const res = await supertest(app)
+        .post('/api/users/register')
+        .set('x-requested-with', 'XmlHttpRequest')
+        .send({
+          email: 'test@example.com',
+          username: 'test',
+          password: 'test',
+        });
 
       const user = (await User.findOne()) as User;
       expect(res.status).eq(201);
@@ -32,14 +35,20 @@ describe('Users', () => {
       const userData = { email: 'email@example.com', username: 'username', password: 'password' };
       let user = await User.register(userData);
 
-      const res = await supertest(app).post('/api/users/register').send(userData);
+      const res = await supertest(app)
+        .post('/api/users/register')
+        .set('x-requested-with', 'XmlHttpRequest')
+        .send(userData);
 
       expect(res.status).eq(400);
       expect(res.body.error).eq('Username taken');
     });
 
     it('should reject missing data', async () => {
-      const res = await supertest(app).post('/api/users/register').send({});
+      const res = await supertest(app)
+        .post('/api/users/register')
+        .set('x-requested-with', 'XmlHttpRequest')
+        .send({});
 
       expect(res.status).eq(400);
       expect(res.body.error).eq(
@@ -52,10 +61,13 @@ describe('Users', () => {
     it('should login user', async () => {
       let user = await User.register('email', 'username', 'password');
 
-      const res = await supertest(app).post('/api/users/login').send({
-        username: user.username,
-        password: 'password',
-      });
+      const res = await supertest(app)
+        .post('/api/users/login')
+        .set('x-requested-with', 'XmlHttpRequest')
+        .send({
+          username: user.username,
+          password: 'password',
+        });
       user = (await User.rawGetOne()) as User;
 
       expect(res.status).eq(200);
@@ -75,10 +87,13 @@ describe('Users', () => {
     it('should not login user with bad username', async () => {
       await User.register('email', 'username', 'password');
 
-      const res = await supertest(app).post('/api/users/login').send({
-        username: 'bad',
-        password: 'password',
-      });
+      const res = await supertest(app)
+        .post('/api/users/login')
+        .set('x-requested-with', 'XmlHttpRequest')
+        .send({
+          username: 'bad',
+          password: 'password',
+        });
 
       expect(res.status).eq(400);
       expect(res.body.payload).null;
@@ -88,10 +103,13 @@ describe('Users', () => {
     it('should not login user with bad password', async () => {
       await User.register('email', 'username', 'password');
 
-      const res = await supertest(app).post('/api/users/login').send({
-        username: 'username',
-        password: 'bad',
-      });
+      const res = await supertest(app)
+        .post('/api/users/login')
+        .set('x-requested-with', 'XmlHttpRequest')
+        .send({
+          username: 'username',
+          password: 'bad',
+        });
 
       expect(res.status).eq(400);
       expect(res.body.payload).null;
@@ -108,6 +126,7 @@ describe('Users', () => {
 
       const res = await supertest(app)
         .get('/api/users/refresh-token')
+        .set('x-requested-with', 'XmlHttpRequest')
         .set('Cookie', `refreshToken=${token}`);
 
       expect(res.status).eq(200);
@@ -123,6 +142,7 @@ describe('Users', () => {
 
       const res = await supertest(app)
         .get('/api/users/refresh-token')
+        .set('x-requested-with', 'XmlHttpRequest')
         .set('Cookie', `refreshToken=bad`);
 
       expect(res.status).eq(401);
@@ -138,6 +158,7 @@ describe('Users', () => {
 
       const res = await supertest(app)
         .get('/api/users/current')
+        .set('x-requested-with', 'XmlHttpRequest')
         .set('Cookie', `accessToken=${token}`);
 
       expect(res.status).eq(200);
@@ -146,7 +167,9 @@ describe('Users', () => {
     });
 
     it('should not get current user', async () => {
-      const res = await supertest(app).get('/api/users/current');
+      const res = await supertest(app)
+        .get('/api/users/current')
+        .set('x-requested-with', 'XmlHttpRequest');
 
       expect(res.status).eq(401);
       expect(res.body).deep.eq({});

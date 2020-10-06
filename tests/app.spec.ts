@@ -22,7 +22,9 @@ describe('app', () => {
   });
 
   it('should return 404 for api path not found', async () => {
-    const res = await supertest(app).get('/api/badpath');
+    const res = await supertest(app)
+      .get('/api/badpath')
+      .set('x-requested-with', 'XmlHttpRequest');
     expect(res.body.error).to.equal('Not found');
     expect(res.status).to.equal(404);
   });

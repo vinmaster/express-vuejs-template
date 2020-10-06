@@ -2,10 +2,12 @@ import 'reflect-metadata';
 import app from './app';
 import { connectDatabase } from './lib/database';
 import { Logger } from './lib/logger';
+import { WebSocketApp } from './web-socket-app';
 
 const port = process.env.PORT || 8000;
 const server = require('http').createServer(app);
-// const io = require('socket.io')(server);
+const io = require('socket.io')(server);
+WebSocketApp.setup(io);
 
 // Start server
 server.listen(port, async () => {

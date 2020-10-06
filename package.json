@@ -1,26 +1,22 @@
 {
   "name": "express-vuejs-template",
   "version": "2.0.0",
-  "description": "Express + Vuejs Template",
   "private": true,
-  "engines": {
-    "node": "~12.18.0",
-    "npm": "~6.14.0"
-  },
+  "description": "Express + Vuejs Template",
   "scripts": {
-    "start": "npm run server",
-    "server": "node build/index.js",
-    "server-prod": "NODE_ENV=production npm start",
-    "build": "npm run clean && npm run build-client && npm run build-server",
-    "build-client": "vue-cli-service build client/src/index.ts",
+    "build": "npm run clean && npm run build-client && npm run build-server && cp client/public/favicon.ico build/public/",
+    "build-client": "vue-cli-service build client/src/main.js",
     "build-server": "tsc --build tsconfig.server.json",
     "clean": "rm -rf build",
     "dev": "concurrently \"npm:dev-*\"",
     "dev-client": "vue-cli-service serve client/src/main.js",
     "dev-server": "ts-node-dev --project tsconfig.server.json --inspect=4321 --respawn --no-notify ./server/index.ts",
-    "test-watch": "cross-env NODE_ENV=test TS_NODE_PROJECT=tsconfig.server.json mocha -r ts-node/register --watch --watch-files server, tests/**/*.spec.ts",
+    "heroku-postbuild": "npm run build",
+    "server": "node build/index.js",
+    "start": "npm run server",
+    "start-prod": "cross-env NODE_ENV=production npm start",
     "test": "cross-env NODE_ENV=test TS_NODE_PROJECT=tsconfig.server.json mocha -r ts-node/register \"tests/**/*.spec.ts\"",
-    "heroku-postbuild": "npm run build-server && cd client && npm i && npm run build && cd .. && cp -R client/dist build/public"
+    "test-watch": "cross-env NODE_ENV=test TS_NODE_PROJECT=tsconfig.server.json mocha -r ts-node/register --watch --watch-files server, tests/**/*.spec.ts"
   },
   "dependencies": {
     "@types/bcrypt": "^3.0.0",
@@ -45,6 +41,7 @@
     "@vue/cli-plugin-babel": "^4.5.6",
     "@vue/cli-plugin-eslint": "^4.5.6",
     "@vue/cli-service": "^4.5.6",
+    "axios": "^0.20.0",
     "babel-eslint": "^10.1.0",
     "bcrypt": "^5.0.0",
     "compression": "^1.7.4",
@@ -60,6 +57,7 @@
     "helmet": "^4.1.1",
     "hpp": "^0.2.3",
     "jsonwebtoken": "^8.5.1",
+    "material-design-icons-iconfont": "^6.1.0",
     "morgan": "^1.10.0",
     "ms": "^2.1.2",
     "passport": "^0.4.1",
@@ -67,14 +65,21 @@
     "pg": "^8.3.3",
     "rate-limiter-flexible": "^2.1.10",
     "reflect-metadata": "^0.1.13",
+    "sass": "^1.26.11",
+    "sass-loader": "^10.0.2",
     "serve-favicon": "^2.5.0",
     "socket.io": "^2.3.0",
-    "socket.io-client": "^2.3.0",
+    "socket.io-client": "^2.3.1",
     "typeorm": "^0.2.26",
     "typescript": "^4.0.3",
     "uuid": "^8.3.0",
     "vue": "^2.6.12",
+    "vue-cli-plugin-vuetify": "^2.0.7",
+    "vue-router": "^3.4.5",
+    "vue-socket.io-extended": "^4.0.5",
     "vue-template-compiler": "^2.6.12",
+    "vuetify": "^2.2.11",
+    "vuetify-loader": "^1.6.0",
     "winston": "^3.3.3"
   },
   "devDependencies": {
@@ -101,5 +106,9 @@
       "parser": "babel-eslint"
     },
     "rules": {}
+  },
+  "engines": {
+    "node": "~12.18.0",
+    "npm": "~6.14.0"
   }
 }
