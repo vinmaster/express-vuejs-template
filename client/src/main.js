@@ -13,10 +13,16 @@ export const router = new VueRouter({
 });
 Vue.use(VueRouter);
 
+const socketOptions = {
+  reconnection: true,
+  reconnectionDelay: 500,
+  reconnectionDelayMax: 5000,
+  reconnectionAttempts: 3,
+};
 if (process.env.NODE_ENV === 'development') {
-  Vue.use(VueSocketIOExt, SocketIO(':8000'));
+  Vue.use(VueSocketIOExt, SocketIO(':8000', socketOptions));
 } else {
-  Vue.use(VueSocketIOExt, SocketIO());
+  Vue.use(VueSocketIOExt, SocketIO(socketOptions));
 }
 
 Vue.config.productionTip = false;

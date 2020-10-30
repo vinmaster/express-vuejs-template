@@ -29,7 +29,7 @@
 
                 <v-card-subtitle v-text="item.artist"></v-card-subtitle>
 
-                <v-card-action>
+                <v-card-actions>
                   <v-btn
                     v-if="item.artist === 'Ellie Goulding'"
                     class="ml-2 mt-3"
@@ -45,7 +45,7 @@
                   <v-btn v-else class="ml-2 mt-5" outlined rounded small>
                     START RADIO
                   </v-btn>
-                </v-card-action>
+                </v-card-actions>
               </div>
 
               <v-avatar class="ma-3" size="125" tile>

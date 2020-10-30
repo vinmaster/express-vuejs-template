@@ -13,7 +13,7 @@
               <v-row>
                 <v-col cols="12">
                   <v-text-field
-                    v-model="loginEmail"
+                    v-model="loginUsername"
                     :rules="[rules.required]"
                     label="E-mail"
                     required
@@ -30,6 +30,7 @@
                     hint="At least 8 characters"
                     counter
                     @click:append="show1 = !show1"
+                    @keydown.native.enter="validate"
                   ></v-text-field>
                 </v-col>
                 <v-col class="d-flex" cols="12" sm="6" xsm="12"> </v-col>
@@ -77,6 +78,14 @@
                 </v-col>
                 <v-col cols="12">
                   <v-text-field
+                    v-model="username"
+                    :rules="[rules.required]"
+                    label="Username"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
                     v-model="password"
                     :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                     :rules="[rules.required, rules.min]"
@@ -113,6 +122,29 @@
         </v-card>
       </v-tab-item>
     </v-tabs>
+
+    <v-dialog v-model="dialog" max-width="300">
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn color="primary" dark v-bind="attrs" v-on="on">
+          Open Dialog
+        </v-btn>
+      </template>
+      <v-card>
+        <v-card-title class="headline">
+          {{ dialogText }}
+        </v-card-title>
+        <!-- <v-card-text>Registered</v-card-text> -->
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <!-- <v-btn color="green darken-1" text @click="dialog = false">
+            Disagree
+          </v-btn> -->
+          <v-btn color="error" @click="dialog = false">
+            Close
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -132,18 +164,21 @@ export default {
 
   methods: {
     async validate() {
-      if (this.$refs.loginForm.validate()) {
-        if (this.tab === 0) {
-          const res = await Api.login({ username: this.loginEmail, password: this.loginPassword });
-          console.log('res', res);
-        } else if (this.tab === 1) {
-          const res = await Api.register({
-            email: this.email,
-            username: this.email,
-            password: this.password,
-          });
-          console.log('res', res);
-        }
+      if (this.tab === 0 && this.$refs.loginForm.validate()) {
+        const res = await Api.login({
+          username: this.loginUsername,
+          password: this.loginPassword,
+        });
+        console.log('res', res);
+      } else if (this.tab === 1 && this.$refs.registerForm.validate()) {
+        const res = await Api.register({
+          email: this.email,
+          username: this.username,
+          password: this.password,
+        });
+        console.log('res', res);
+        this.dialog = true;
+        this.dialogText = 'Registration Complete';
       }
     },
     reset() {
@@ -161,7 +196,8 @@ export default {
   },
 
   data: () => ({
-    dialog: true,
+    dialog: false,
+    dialogText: '',
     tab: 0,
     valid: true,
     tabs: [
@@ -171,11 +207,15 @@ export default {
     firstName: '',
     lastName: '',
     email: '',
+    username: '',
     password: '',
     verify: '',
     loginPassword: '',
-    loginEmail: '',
-    loginEmailRules: [v => !!v || 'Required', v => /.+@.+\..+/.test(v) || 'E-mail must be valid'],
+    loginUsername: '',
+    loginUsernameRules: [
+      v => !!v || 'Required',
+      v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+    ],
 
     show1: false,
     rules: {
