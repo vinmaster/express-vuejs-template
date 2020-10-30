@@ -1,3 +1,5 @@
+import cookie from 'cookie';
+
 export class WebSocketApp {
   static io: SocketIO.Server;
   static sockets: { [id: string]: any } = {};
@@ -5,11 +7,16 @@ export class WebSocketApp {
   static setup(io) {
     this.io = io;
     this.io.on('connection', this.onConnection.bind(this));
-    console.log('setup');
   }
 
   static onConnection(socket: SocketIO.Socket) {
     console.log('connected', socket.id);
+    const cookieObj = cookie.parse(socket.handshake.headers.cookie);
+    if (!cookieObj.accessToken) {
+      console.log('force disconnect');
+      socket.disconnect(true);
+    }
+    console.log('cookie', cookieObj);
     this.sockets[socket.id] = { id: socket.id };
 
     this.sendAll('CONNECTED', socket.id);

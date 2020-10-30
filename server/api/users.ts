@@ -16,8 +16,12 @@ usersRoutes.post(
       .isEmail()
       .normalizeEmail()
       .withMessage('is not valid'),
-    body('username').notEmpty().withMessage('is required'),
-    body('password').notEmpty().withMessage('is required'),
+    body('username')
+      .notEmpty()
+      .withMessage('is required'),
+    body('password')
+      .notEmpty()
+      .withMessage('is required'),
   ],
   async (req, res) => {
     // console.log('accessToken', req.signedCookies.accessToken);
@@ -60,7 +64,7 @@ usersRoutes.post('/logout', (req, res) => {
   res.status(200).send();
 });
 
-usersRoutes.get('/refresh-token', async (req, res) => {
+usersRoutes.post('/refresh-token', async (req, res) => {
   const user = await refreshToken(req, res);
   Utility.apiRender(res, user.toJson());
 });

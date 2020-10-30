@@ -59,7 +59,7 @@ export default class Api {
 
   static async refreshToken() {
     try {
-      const res = await http.get(`${BASE_URL}/api/users/refresh-token`);
+      const res = await http.post(`${BASE_URL}/api/users/refresh-token`);
       state.user = res.data.payload;
       return res;
     } catch (error) {

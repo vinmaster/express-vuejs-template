@@ -125,7 +125,7 @@ describe('Users', () => {
       await user.save();
 
       const res = await supertest(app)
-        .get('/api/users/refresh-token')
+        .post('/api/users/refresh-token')
         .set('x-requested-with', 'XmlHttpRequest')
         .set('Cookie', `refreshToken=${token}`);
 
@@ -141,7 +141,7 @@ describe('Users', () => {
       await user.save();
 
       const res = await supertest(app)
-        .get('/api/users/refresh-token')
+        .post('/api/users/refresh-token')
         .set('x-requested-with', 'XmlHttpRequest')
         .set('Cookie', `refreshToken=bad`);
 
@@ -158,7 +158,6 @@ describe('Users', () => {
 
       const res = await supertest(app)
         .get('/api/users/current')
-        .set('x-requested-with', 'XmlHttpRequest')
         .set('Cookie', `accessToken=${token}`);
 
       expect(res.status).eq(200);
@@ -167,9 +166,7 @@ describe('Users', () => {
     });
 
     it('should not get current user', async () => {
-      const res = await supertest(app)
-        .get('/api/users/current')
-        .set('x-requested-with', 'XmlHttpRequest');
+      const res = await supertest(app).get('/api/users/current');
 
       expect(res.status).eq(401);
       expect(res.body).deep.eq({});
