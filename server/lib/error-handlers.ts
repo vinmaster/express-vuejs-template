@@ -31,9 +31,11 @@ export function expressErrorHandler(err, req: Request, res, next) {
   }
   // For pino logger
   // Logger.error({ reqId: req.id }, `${error.message}\n${error.stack}`);
-  Logger.error(`${error.message}\n${error.stack}`);
-
   const status = error.status || 500;
+  if (status !== 404) {
+    Logger.error(`${error.message}\n${error.stack}`);
+  }
+
   let message = error.appMessage || 'Bad Request';
   if (status === 500) {
     message = 'Internal Server Error';

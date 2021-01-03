@@ -18,12 +18,17 @@ export function registerAuthentication(app) {
   };
 
   const verifyCallback: passportJwt.VerifyCallback = (payload, done) => {
+    // Object passed back is in req.user
     done(null, { id: payload.sub });
-    // find user success
-    // done(null, { userId: payload.sub });
 
-    // not found
-    // done(null, false);
+    // If req.user should be a user obj
+    // const user = null// find user obj
+    // if (user) {
+    //   done(null, user);
+    // } else {
+    //   // User not found
+    //   done(null, false);
+    // }
 
     // error
     // done(err, false);

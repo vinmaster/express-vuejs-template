@@ -1,4 +1,5 @@
 import cookie from 'cookie';
+import jsonwebtoken from 'jsonwebtoken';
 
 export class WebSocketApp {
   static io: SocketIO.Server;
@@ -16,7 +17,11 @@ export class WebSocketApp {
       console.log('force disconnect');
       socket.disconnect(true);
     }
-    console.log('cookie', cookieObj);
+    const jwt = jsonwebtoken.decode(cookieObj.accessToken);
+    if (jwt && jwt.sub) {
+      socket['userId'] = jwt.sub;
+    }
+    console.log('cookie', jwt);
     this.sockets[socket.id] = { id: socket.id };
 
     this.sendAll('CONNECTED', socket.id);

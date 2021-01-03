@@ -18,6 +18,7 @@ http.interceptors.request.use(config => {
 http.interceptors.response.use(
   response => response,
   async error => {
+    console.error(error);
     const originalRequest = error.config;
     if (
       originalRequest.url.includes('/refresh-token') ||
