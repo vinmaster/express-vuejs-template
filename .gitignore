@@ -13,3 +13,4 @@ build
 client/dist
 *.log
 .env
+*.db

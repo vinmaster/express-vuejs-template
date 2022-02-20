@@ -1,13 +1,16 @@
 import { expect } from 'chai';
 import 'mocha';
+import { beforeEach } from 'mocha';
 import supertest from 'supertest';
 import app from '../server/app';
 import { getAccessToken } from '../server/lib/authentication';
+import { orm } from '../server/lib/database';
+import { Utility } from '../server/lib/utility';
 import { User } from '../server/models/user';
-import { closeDb, connectDb, deleteData, extractCookies } from './test-utility';
+import { clearData, closeDb, connectDb, extractCookies } from './test-utility';
 
 before(async () => await connectDb());
-beforeEach(async () => await deleteData());
+beforeEach(async () => await clearData());
 after(async () => await closeDb());
 
 describe('Users', () => {
@@ -22,13 +25,14 @@ describe('Users', () => {
           password: 'test',
         });
 
-      const user = (await User.findOne()) as User;
+      const users = await orm.em.find(User, {});
+      expect(users).lengthOf(1);
+      const user = (users[0] as any).toJSON();
       expect(res.status).eq(201);
-      expect(res.body.payload).deep.eq(user.toJson());
+      expect(res.body.payload).deep.eq(user);
       expect(res.body.error).null;
-      const usersCount = await User.count();
+      const usersCount = await orm.em.count(User);
       expect(usersCount).eq(1);
-      // expect(users).lengthOf(1);
     });
 
     it('should not register taken username', async () => {
@@ -59,7 +63,7 @@ describe('Users', () => {
 
   describe('login', () => {
     it('should login user', async () => {
-      let user = await User.register('email', 'username', 'password');
+      let user: User = await User.register({ email: 'email', username: 'username', password: 'password' });
 
       const res = await supertest(app)
         .post('/api/users/login')
@@ -68,10 +72,11 @@ describe('Users', () => {
           username: user.username,
           password: 'password',
         });
-      user = (await User.rawGetOne()) as User;
+      user = (await orm.em.find(User, {}))[0];
 
+      expect(user).not.null;
       expect(res.status).eq(200);
-      expect(res.body.payload).deep.eq(user.toJson());
+      expect(res.body.payload).deep.eq(user.toJSON());
       expect(res.body.payload.lastLoginAt).not.null;
       expect(res.body.error).null;
       const cookies = extractCookies(res.headers);
@@ -85,7 +90,7 @@ describe('Users', () => {
     });
 
     it('should not login user with bad username', async () => {
-      await User.register('email', 'username', 'password');
+      await User.register({ email: 'email', username: 'username', password: 'password' });
 
       const res = await supertest(app)
         .post('/api/users/login')
@@ -101,7 +106,7 @@ describe('Users', () => {
     });
 
     it('should not login user with bad password', async () => {
-      await User.register('email', 'username', 'password');
+      await User.register({ email: 'email', username: 'username', password: 'password' });
 
       const res = await supertest(app)
         .post('/api/users/login')
@@ -119,10 +124,10 @@ describe('Users', () => {
 
   describe('refresh-token', () => {
     it('should refresh token', async () => {
-      const user = await User.register('email', 'username', 'password');
+      const user = await User.register({ email: 'email', username: 'username', password: 'password' });
       const token = 'test refresh token';
       user.refreshToken = token;
-      await user.save();
+      await orm.em.flush();
 
       const res = await supertest(app)
         .post('/api/users/refresh-token')
@@ -130,15 +135,15 @@ describe('Users', () => {
         .set('Cookie', `refreshToken=${token}`);
 
       expect(res.status).eq(200);
-      expect(res.body.payload).deep.eq(user.toJson());
+      expect(res.body.payload).deep.eq(user.toJSON());
       expect(res.body.error).eq(null);
     });
 
     it('should not refresh token with bad token', async () => {
-      const user = await User.register('email', 'username', 'password');
+      const user = await User.register({ email: 'email', username: 'username', password: 'password' });
       const token = 'test refresh token';
       user.refreshToken = token;
-      await user.save();
+      await orm.em.flush();
 
       const res = await supertest(app)
         .post('/api/users/refresh-token')
@@ -153,7 +158,7 @@ describe('Users', () => {
 
   describe('current', () => {
     it('should get current user', async () => {
-      const user = await User.register('email', 'username', 'password');
+      const user = await User.register({ email: 'email', username: 'username', password: 'password' });
       const token = getAccessToken(user);
 
       const res = await supertest(app)
@@ -161,7 +166,7 @@ describe('Users', () => {
         .set('Cookie', `accessToken=${token}`);
 
       expect(res.status).eq(200);
-      expect(res.body.payload).deep.eq(user.toJson());
+      expect(res.body.payload).deep.eq(user.toJSON());
       expect(res.body.error).eq(null);
     });
 

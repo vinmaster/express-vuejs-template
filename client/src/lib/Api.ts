@@ -1,6 +1,6 @@
 import axios from 'axios';
-import Auth, { state } from './Auth';
-import { router } from '../main';
+import { state } from './State';
+import { router } from '../router';
 
 let BASE_URL = '';
 axios.defaults.withCredentials = true;
@@ -12,7 +12,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 http.interceptors.request.use(config => {
-  config.headers['X-Requested-With'] = 'XmlHttpRequest';
+  config.headers!['X-Requested-With'] = 'XmlHttpRequest';
   return config;
 });
 http.interceptors.response.use(
@@ -31,7 +31,7 @@ http.interceptors.response.use(
     originalRequest._attempt = true;
     try {
       // This will log the user out
-      await Auth.refreshToken();
+      await Api.refreshToken();
       return http(originalRequest);
     } catch (error) {
       return Promise.reject(error);
@@ -40,14 +40,13 @@ http.interceptors.response.use(
 );
 
 export default class Api {
-  static async login({ username, password }) {
+  static async login({ username, password }: { username: string; password: string; }) {
     const res = await http.post(`${BASE_URL}/api/users/login`, { username, password });
     state.user = res.data.payload;
-    await router.push('/');
     return res;
   }
 
-  static async register({ email, username, password }) {
+  static async register({ email, username, password }: { email: string; username: string; password: string; }) {
     const res = await http.post(`${BASE_URL}/api/users/register`, { email, username, password });
     return res;
   }
@@ -64,7 +63,8 @@ export default class Api {
       state.user = res.data.payload;
       return res;
     } catch (error) {
-      await this.logout();
+      // await this.logout();
+      return error;
     }
   }
 

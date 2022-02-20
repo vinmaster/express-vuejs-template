@@ -1,22 +1,25 @@
-import { connectDatabase, connection } from '../server/lib/database';
+import { connect, orm } from '../server/lib/database';
 
 export async function connectDb() {
   process.env.DATABASE_URL = 'postgres://postgres:postgres@localhost/test';
-  await connectDatabase();
+  await connect();
+  orm.config.set('allowGlobalContext', true);
+
+  // const migrator = orm.getMigrator();
+  // await migrator.createMigration();
+  // await migrator.up();
+}
+
+export async function clearData() {
+  const schema = orm.getSchemaGenerator();
+  // schema.refreshDatabase();
+  await schema.dropSchema();
+  await schema.createSchema();
+  // await schema.updateSchema();
 }
 
 export async function closeDb() {
-  if (connection.isConnected) await connection.close();
-}
-
-export async function deleteData() {
-  const entities = connection.entityMetadatas;
-
-  for (const entity of entities) {
-    const repository = connection.getRepository(entity.name);
-    await repository.query(`DELETE FROM ${entity.tableName}`);
-  }
-  // await connection.getRepository('User').query(`DELETE FROM users;`);
+  if (await orm.isConnected()) await orm.close(true);
 }
 
 // Credit to: https://gist.github.com/the-vampiire/a564af41ed0ce8eb7c30dbe6c0f627d8

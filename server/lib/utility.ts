@@ -41,7 +41,7 @@ export class Utility {
       .join(' ');
   }
 
-  static getObjectSlice(obj, keys: string[]) {
+  static getObjectSlice<T>(obj: T, keys: string[]): Partial<T> {
     return keys.reduce((acc, current) => {
       acc[current] = obj[current];
       return acc;

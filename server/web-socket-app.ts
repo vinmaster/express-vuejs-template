@@ -1,18 +1,19 @@
 import cookie from 'cookie';
 import jsonwebtoken from 'jsonwebtoken';
+import { Socket } from 'socket.io';
 
 export class WebSocketApp {
-  static io: SocketIO.Server;
-  static sockets: { [id: string]: any } = {};
+  static io: Socket;
+  static sockets: { [id: string]: any; } = {};
 
   static setup(io) {
     this.io = io;
     this.io.on('connection', this.onConnection.bind(this));
   }
 
-  static onConnection(socket: SocketIO.Socket) {
+  static onConnection(socket: Socket) {
     console.log('connected', socket.id);
-    const cookieObj = cookie.parse(socket.handshake.headers.cookie);
+    const cookieObj = cookie.parse(socket.handshake.headers.cookie!);
     if (!cookieObj.accessToken) {
       console.log('force disconnect');
       socket.disconnect(true);
@@ -38,7 +39,7 @@ export class WebSocketApp {
     this.io.emit(event, data);
   }
 
-  static sendAllExcept(socket: SocketIO.Socket, event: string, data) {
+  static sendAllExcept(socket: Socket, event: string, data) {
     socket.emit(event, data);
   }
 
@@ -46,11 +47,11 @@ export class WebSocketApp {
     this.io.to(room).emit(event, data);
   }
 
-  static sendRoomExcept(socket: SocketIO.Socket, room: string, event: string, data) {
+  static sendRoomExcept(socket: Socket, room: string, event: string, data) {
     socket.to(room).emit(event, data);
   }
 
-  static sendTo(socket: SocketIO.Socket, event: string, data) {
+  static sendTo(socket: Socket, event: string, data) {
     socket.emit(event, data);
   }
 }

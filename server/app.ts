@@ -1,3 +1,4 @@
+import { RequestContext } from '@mikro-orm/core';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -7,6 +8,7 @@ import hpp from 'hpp';
 import path from 'path';
 import serveFavicon from 'serve-favicon';
 import { registerAuthentication } from './lib/authentication';
+import { orm } from './lib/database';
 import {
   expressErrorHandler,
   uncaughtExceptionHandler,
@@ -62,6 +64,10 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'));
 // Authentication middleware
 registerAuthentication(app);
+// Give database its own request context
+app.use((req, res, next) => {
+  RequestContext.create(orm.em, next);
+});
 // Register routes
 app.use('/', routes);
 // Error handler for request

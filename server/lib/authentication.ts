@@ -6,6 +6,7 @@ import ms from 'ms';
 import passport from 'passport';
 import passportJwt from 'passport-jwt';
 import { User } from '../models/user';
+import { orm } from './database';
 import { Utility } from './utility';
 
 const saltRounds = 10;
@@ -57,7 +58,7 @@ export function setAccessToken(req: Request, res: Response, user: User) {
     secure: Utility.env == 'production' && req.secure,
     sameSite: 'strict',
     httpOnly: true,
-    maxAge: ms(process.env.ACCESS_TOKEN_EXPIRE_TIME as string),
+    maxAge: ms(process.env.ACCESS_TOKEN_EXPIRE_TIME as any),
   });
 }
 
@@ -73,14 +74,14 @@ export function getAccessToken(user: User): string {
 export async function setRefreshToken(req: Request, res: Response, user: User) {
   if (!user.refreshToken) {
     user.refreshToken = generateRefreshToken();
-    await user.save();
+    await orm.em.flush();
   }
   res.cookie('refreshToken', user.refreshToken, {
     // signed: true,
     secure: Utility.env == 'production' && req.secure,
     sameSite: 'strict',
     httpOnly: true,
-    maxAge: ms(process.env.REFRESH_TOKEN_EXPIRE_TIME as string),
+    maxAge: ms(process.env.REFRESH_TOKEN_EXPIRE_TIME as any),
   });
 }
 
@@ -93,7 +94,7 @@ export async function refreshToken(req, res) {
   const { refreshToken } = req.cookies;
   if (!refreshToken) throw Utility.createError('No refresh token', 401);
 
-  const user = await User.findOne({ refreshToken });
+  const user = await orm.em.findOne(User, { refreshToken });
   if (!user) throw Utility.createError('Invalid refresh token', 401);
   setAccessToken(req, res, user);
 

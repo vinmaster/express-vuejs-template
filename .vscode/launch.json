@@ -34,5 +34,6 @@
       // "internalConsoleOptions": "neverOpen",
       // "protocol": "inspector"
     }
-  ]
+  ],
+  "recommendations": ["johnsoncodehk.volar"]
 }

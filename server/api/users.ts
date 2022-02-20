@@ -1,6 +1,7 @@
 import express from 'express';
 import { body, validationResult } from 'express-validator';
 import { authenticate, refreshToken, setAccessToken, setRefreshToken } from '../lib/authentication';
+import { orm } from '../lib/database';
 import { Logger } from '../lib/logger';
 import { Utility } from '../lib/utility';
 import { User } from '../models/user';
@@ -43,19 +44,19 @@ usersRoutes.post(
       );
     }
     const { email, username, password } = req.body;
-    const user = await User.register(email, username, password);
-    Utility.apiRender(res, user.toJson(), 201);
+    const user = await User.register({ email, username, password });
+    Utility.apiRender(res, user, 201);
   }
 );
 
 usersRoutes.post('/login', async (req, res) => {
   const { username, password } = req.body;
-  const user = await User.login(username, password);
+  const user = await User.login({ username, password });
 
   setAccessToken(req, res, user);
   await setRefreshToken(req, res, user);
   Logger.info('User logged in', user);
-  Utility.apiRender(res, user.toJson());
+  Utility.apiRender(res, user);
 });
 
 usersRoutes.post('/logout', (req, res) => {
@@ -66,14 +67,14 @@ usersRoutes.post('/logout', (req, res) => {
 
 usersRoutes.post('/refresh-token', async (req, res) => {
   const user = await refreshToken(req, res);
-  Utility.apiRender(res, user.toJson());
+  Utility.apiRender(res, user);
 });
 
 usersRoutes.get('/current', authenticate(), async (req, res) => {
   const userId = req.user!['id'];
-  const user = await User.findOne(userId);
+  const user = await orm.em.findOne(User, userId);
   if (!user) throw Utility.createError('No such user');
-  Utility.apiRender(res, user.toJson());
+  Utility.apiRender(res, user);
 });
 
 export default usersRoutes;

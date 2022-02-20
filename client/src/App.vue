@@ -1,62 +1,35 @@
-<template>
-  <v-app>
-    <v-app-bar app color="green darken-3" dark>
-      <div class="d-flex align-center">
-        <router-link to="/">
-          <v-img
-            alt="Vuetify Logo"
-            class="shrink mr-2"
-            contain
-            src="@/assets/favicon-32x32.png"
-            transition="scale-transition"
-            width="40"
-          />
-        </router-link>
-      </div>
+<script setup lang="ts">
+// This starter template is using Vue 3 <script setup> SFCs
+// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
+import { isAuthenticated } from './lib/State';
 
-      <v-spacer></v-spacer>
+function logout() {
 
-      <v-btn @click="logout()" v-if="isAuthenticated()" v-cloak>
-        <span class="mr-2">Logout</span>
-      </v-btn>
-      <v-btn :to="{ path: '/login' }" v-if="!isAuthenticated()" v-cloak>
-        <span class="mr-2">Login</span>
-      </v-btn>
-    </v-app-bar>
-
-    <v-main>
-      <router-view></router-view>
-    </v-main>
-  </v-app>
-</template>
-
-<script>
-import Api from './lib/Api';
-import Auth from './lib/Auth';
-
-export default {
-  name: 'App',
-
-  computed: {
-    isAuthenticated() {
-      return Auth.isAuthenticated;
-    },
-  },
-
-  methods: {
-    logout() {
-      Api.logout();
-    },
-  },
-
-  data: () => ({
-    //
-  }),
-};
+}
 </script>
 
+<template>
+  <nav class="navbar">
+    <ul class="navbar-brand">
+      <li class="navbar-item">
+        <router-link to="/">
+          <img alt="Vue Logo" src="./assets/logo.png" width="40" />
+        </router-link>
+      </li>
+      <li class="navbar-item">
+        <a @click="logout()" v-if="isAuthenticated()" v-cloak>Logout</a>
+      </li>
+
+      <li class="navbar-item">
+        <router-link to="/login" v-if="!isAuthenticated()" v-cloak>Login</router-link>
+      </li>
+    </ul>
+  </nav>
+  <router-view></router-view>
+</template>
+
 <style>
-[v-cloak] {
-  display: none;
+#app {
+  height: 100%;
 }
 </style>

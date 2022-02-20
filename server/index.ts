@@ -2,7 +2,7 @@ import http from 'http';
 import { AddressInfo } from 'net';
 import 'reflect-metadata';
 import app from './app';
-import { connectDatabase } from './lib/database';
+import * as db from './lib/database';
 import { Logger } from './lib/logger';
 import { WebSocketApp } from './web-socket-app';
 
@@ -14,7 +14,7 @@ WebSocketApp.setup(io);
 // Start server
 server.listen(port, async () => {
   try {
-    await connectDatabase();
+    await db.connect();
     const addressInfo = server.address() as AddressInfo;
     let host = addressInfo.address;
     if (app.get('env') === 'development') {

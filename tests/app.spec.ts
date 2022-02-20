@@ -2,10 +2,10 @@ import { expect } from 'chai';
 import 'mocha';
 import supertest from 'supertest';
 import app from '../server/app';
-import { closeDb, connectDb, deleteData, extractCookies } from './test-utility';
+import { clearData, closeDb, connectDb, extractCookies } from './test-utility';
 
 before(async () => await connectDb());
-beforeEach(async () => await deleteData());
+beforeEach(async () => await clearData());
 after(async () => await closeDb());
 
 describe('app', () => {
