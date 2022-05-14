@@ -4,7 +4,7 @@ import { Socket } from 'socket.io';
 
 export class WebSocketApp {
   static io: Socket;
-  static sockets: { [id: string]: any; } = {};
+  static sockets: { [id: string]: any } = {};
 
   static setup(io) {
     this.io = io;
@@ -13,16 +13,23 @@ export class WebSocketApp {
 
   static onConnection(socket: Socket) {
     console.log('connected', socket.id);
-    const cookieObj = cookie.parse(socket.handshake.headers.cookie!);
-    if (!cookieObj.accessToken) {
-      console.log('force disconnect');
-      socket.disconnect(true);
-    }
-    const jwt = jsonwebtoken.decode(cookieObj.accessToken);
-    if (jwt && jwt.sub) {
-      socket['userId'] = jwt.sub;
-    }
-    console.log('cookie', jwt);
+    // let clientCookie: string = socket.handshake.headers.cookie!;
+    // if (!clientCookie) {
+    //   console.log('cookie not found');
+    //   socket.disconnect(true);
+    //   return;
+    // }
+    // const cookieObj = cookie.parse(clientCookie);
+    // if (!cookieObj.accessToken) {
+    //   console.log('force disconnect');
+    //   socket.disconnect(true);
+    //   return;
+    // }
+    // const jwt = jsonwebtoken.decode(cookieObj.accessToken);
+    // if (jwt && jwt.sub) {
+    //   socket['userId'] = jwt.sub;
+    // }
+    // console.log('cookie', jwt);
     this.sockets[socket.id] = { id: socket.id };
 
     this.sendAll('CONNECTED', socket.id);

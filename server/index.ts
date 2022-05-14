@@ -8,7 +8,9 @@ import { WebSocketApp } from './web-socket-app';
 
 const port = parseInt(process.env.PORT || '8000', 10);
 const server = http.createServer(app);
-const io = require('socket.io')(server);
+const io = require('socket.io')(server, {
+  cors: { origin: process.env.DOMAIN, credentials: true },
+});
 WebSocketApp.setup(io);
 
 // Start server
